@@ -1,15 +1,18 @@
 
 import { useState, useEffect } from "react";
-import { Bell } from "lucide-react";
+import { Bell, ChevronLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
 
 interface HeaderProps {
   title: string;
   subtitle?: string;
+  showBackButton?: boolean;
 }
 
-export const Header = ({ title, subtitle }: HeaderProps) => {
+export const Header = ({ title, subtitle, showBackButton }: HeaderProps) => {
   const [scrolled, setScrolled] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -28,11 +31,21 @@ export const Header = ({ title, subtitle }: HeaderProps) => {
       )}
     >
       <div className="container max-w-md mx-auto flex justify-between items-center">
-        <div className="flex flex-col">
-          <h1 className="text-lg font-medium tracking-tight">{title}</h1>
-          {subtitle && (
-            <p className="text-xs text-muted-foreground">{subtitle}</p>
+        <div className="flex items-center">
+          {showBackButton && (
+            <button 
+              onClick={() => navigate(-1)}
+              className="mr-2 w-8 h-8 rounded-full flex items-center justify-center bg-secondary hover:bg-secondary/80 transition-colors"
+            >
+              <ChevronLeft className="h-4 w-4 text-foreground/80" />
+            </button>
           )}
+          <div className="flex flex-col">
+            <h1 className="text-lg font-medium tracking-tight">{title}</h1>
+            {subtitle && (
+              <p className="text-xs text-muted-foreground">{subtitle}</p>
+            )}
+          </div>
         </div>
         <button className="w-9 h-9 rounded-full flex items-center justify-center bg-secondary hover:bg-secondary/80 transition-colors">
           <Bell className="h-4 w-4 text-foreground/80" />
