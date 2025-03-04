@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { formatPrayerTime, getFastingTimes, getDefaultPrayerTimes, getTimeUntilIftar } from "@/utils/prayerCalculations";
 import { format } from "date-fns";
-import { MoveRight, Alarm, Sunrise, Sunset } from "lucide-react";
+import { MoveRight, Clock, Sunrise, Sunset } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const FastingSchedule = () => {
@@ -76,7 +76,7 @@ export const FastingSchedule = () => {
               <p className="text-sm text-muted-foreground">Breaking fast at {formatPrayerTime(iftar)}</p>
             </div>
             <div className="flex items-center justify-center w-12 h-12 rounded-full bg-ramadan-50 text-ramadan-700">
-              <Alarm className="w-5 h-5" />
+              <Clock className="w-5 h-5" />
             </div>
           </div>
           
