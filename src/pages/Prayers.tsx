@@ -2,7 +2,6 @@
 import { Header } from "@/components/Header";
 import { PrayerTimes } from "@/components/PrayerTimes";
 import { Compass, Map } from "lucide-react";
-import { cn } from "@/lib/utils";
 
 const Prayers = () => {
   return (

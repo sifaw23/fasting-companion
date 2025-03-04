@@ -12,7 +12,16 @@ import Duas from "./pages/Duas";
 import NotFound from "./pages/NotFound";
 import NavMenu from "./components/NavMenu";
 
-const queryClient = new QueryClient();
+// Create a new QueryClient to manage queries
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false, // Don't retry failed queries to avoid looping issues
+      refetchOnWindowFocus: false, // Don't refetch when window regains focus
+      staleTime: 5 * 60 * 1000, // 5 minutes
+    },
+  },
+});
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -20,15 +29,17 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/schedule" element={<Schedule />} />
-          <Route path="/prayers" element={<Prayers />} />
-          <Route path="/quran" element={<Quran />} />
-          <Route path="/duas" element={<Duas />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-        <NavMenu />
+        <div className="min-h-[100dvh] pb-16"> {/* Add container with bottom padding for NavMenu */}
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/schedule" element={<Schedule />} />
+            <Route path="/prayers" element={<Prayers />} />
+            <Route path="/quran" element={<Quran />} />
+            <Route path="/duas" element={<Duas />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+          <NavMenu />
+        </div>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
