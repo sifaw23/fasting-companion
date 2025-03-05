@@ -31,29 +31,17 @@ const queryClient = new QueryClient({
 // AuthCheck component with improved stability
 const AuthCheck = ({ children }: { children: React.ReactNode }) => {
   const { user, isLoading } = useAuth();
-  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+  const [hasCheckedAuth, setHasCheckedAuth] = useState(false);
   
   useEffect(() => {
     if (!isLoading) {
-      // Add a small delay to ensure stable transitions
-      const timer = setTimeout(() => {
-        if (user) {
-          const redirectPath = sessionStorage.getItem('redirectAfterLogin');
-          if (redirectPath) {
-            sessionStorage.removeItem('redirectAfterLogin');
-            window.location.href = redirectPath;
-            return; // Don't proceed further, we're redirecting
-          }
-        }
-        setIsCheckingAuth(false);
-      }, 100);
-      
-      return () => clearTimeout(timer);
+      // Mark that we've checked auth to prevent flickering
+      setHasCheckedAuth(true);
     }
-  }, [user, isLoading]);
+  }, [isLoading]);
   
-  // Show consistent loading state while checking auth
-  if (isLoading || isCheckingAuth) {
+  // Always show loading state until auth check is complete
+  if (isLoading || !hasCheckedAuth) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-white/60 backdrop-blur-sm">
         <div className="flex flex-col items-center space-y-4">
@@ -64,9 +52,11 @@ const AuthCheck = ({ children }: { children: React.ReactNode }) => {
     );
   }
   
-  // Redirect authenticated users away from auth page
+  // Only redirect after we've confirmed auth state
   if (user) {
-    return <Navigate to="/" replace />;
+    const redirectPath = sessionStorage.getItem('redirectAfterLogin') || '/';
+    sessionStorage.removeItem('redirectAfterLogin');
+    return <Navigate to={redirectPath} replace />;
   }
   
   return <>{children}</>;

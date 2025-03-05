@@ -10,22 +10,10 @@ interface ProtectedRouteProps {
 export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const { user, isLoading } = useAuth();
   const location = useLocation();
-  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
-  useEffect(() => {
-    // Only set isCheckingAuth to false after we've confirmed the auth state
-    if (!isLoading) {
-      // Small delay to ensure consistent behavior
-      const timer = setTimeout(() => {
-        setIsCheckingAuth(false);
-      }, 100);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [isLoading]);
-
-  // If we're still loading auth state or checking auth, show loading indicator
-  if (isLoading || isCheckingAuth) {
+  // If we're still loading auth state, show loading indicator
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-white/60 backdrop-blur-sm">
         <div className="flex flex-col items-center space-y-4">
@@ -36,13 +24,15 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     );
   }
 
-  // If user is not authenticated, store current path and redirect to auth
-  if (!user) {
+  // If user is not authenticated and we're not already redirecting, store current path and redirect to auth
+  if (!user && !isRedirecting) {
+    // Store the current location for redirect after login
     sessionStorage.setItem('redirectAfterLogin', location.pathname);
+    setIsRedirecting(true);
     return <Navigate to="/auth" replace />;
   }
 
-  // If we get here, user is authenticated
+  // If we get here, user is authenticated or we're in the process of redirecting
   return <>{children}</>;
 };
 

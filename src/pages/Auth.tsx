@@ -1,6 +1,5 @@
 
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { Header } from '@/components/Header';
@@ -12,26 +11,8 @@ const Auth = () => {
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [loading, setLoading] = useState(false);
-  const [isProcessingAuth, setIsProcessingAuth] = useState(false);
-  const { signIn, signUp, user } = useAuth();
-  const navigate = useNavigate();
+  const { signIn, signUp } = useAuth();
   const { toast } = useToast();
-
-  // Prevent multiple navigation attempts
-  useEffect(() => {
-    if (user && !isProcessingAuth) {
-      setIsProcessingAuth(true);
-      
-      // Get redirect path if exists, otherwise go to home
-      const redirectPath = sessionStorage.getItem('redirectAfterLogin') || '/';
-      sessionStorage.removeItem('redirectAfterLogin');
-      
-      // Small delay to ensure UI is stable
-      setTimeout(() => {
-        navigate(redirectPath, { replace: true });
-      }, 100);
-    }
-  }, [user, navigate, isProcessingAuth]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
