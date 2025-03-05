@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
@@ -25,11 +25,16 @@ const Auth = () => {
         // Handle login
         const { error } = await signIn(email, password);
         if (error) throw error;
+        
         toast({
           title: "Welcome back",
           description: "You've successfully signed in",
         });
-        navigate('/');
+        
+        // Get redirect path if exists, otherwise go to home
+        const redirectPath = sessionStorage.getItem('redirectAfterLogin') || '/';
+        sessionStorage.removeItem('redirectAfterLogin');
+        navigate(redirectPath, { replace: true });
       } else {
         // Handle signup
         if (!fullName) {

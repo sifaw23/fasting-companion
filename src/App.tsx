@@ -15,7 +15,7 @@ import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 import NavMenu from "./components/NavMenu";
 import ProtectedRoute from "./components/ProtectedRoute";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 // Create a new QueryClient to manage queries
 const queryClient = new QueryClient({
@@ -31,9 +31,26 @@ const queryClient = new QueryClient({
 // Add an AuthCheck component to handle auth redirects at the route level
 const AuthCheck = ({ children }: { children: React.ReactNode }) => {
   const { user, isLoading } = useAuth();
+  const [isReady, setIsReady] = useState(false);
+  
+  useEffect(() => {
+    // Only set ready when we have definitively determined auth status
+    if (!isLoading) {
+      if (user) {
+        // If there's a saved redirect path, navigate there
+        const redirectPath = sessionStorage.getItem('redirectAfterLogin');
+        if (redirectPath) {
+          sessionStorage.removeItem('redirectAfterLogin');
+          window.location.href = redirectPath; // Use direct location change to avoid React Router issues
+          return; // Don't set isReady yet, we're redirecting
+        }
+      }
+      setIsReady(true);
+    }
+  }, [user, isLoading]);
   
   // Don't render anything while checking authentication
-  if (isLoading) {
+  if (isLoading || !isReady) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-ramadan-600"></div>
@@ -41,7 +58,7 @@ const AuthCheck = ({ children }: { children: React.ReactNode }) => {
     );
   }
   
-  // Redirect if already logged in
+  // Redirect if already logged in and no redirect path was found
   if (user) {
     return <Navigate to="/" replace />;
   }

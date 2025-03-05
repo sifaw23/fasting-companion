@@ -1,6 +1,6 @@
 
 import { ReactNode, useEffect, useState } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 
 interface ProtectedRouteProps {
@@ -11,17 +11,20 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const { user, isLoading } = useAuth();
   const [isReady, setIsReady] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
-    // Only set ready after we've confirmed authentication state
+    // Only redirect after we've confirmed authentication state
     if (!isLoading) {
       if (!user) {
-        navigate('/auth');
+        // Store the current path to redirect back after login
+        sessionStorage.setItem('redirectAfterLogin', location.pathname);
+        navigate('/auth', { replace: true });
       } else {
         setIsReady(true);
       }
     }
-  }, [user, isLoading, navigate]);
+  }, [user, isLoading, navigate, location.pathname]);
 
   // Show loading state until authentication is confirmed
   if (isLoading || !isReady) {
