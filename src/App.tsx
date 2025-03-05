@@ -80,7 +80,11 @@ const App = () => (
                   <Auth />
                 </AuthCheck>
               } />
-              <Route path="/" element={<Index />} />
+              <Route path="/" element={
+                <ProtectedRoute>
+                  <Index />
+                </ProtectedRoute>
+              } />
               <Route path="/schedule" element={
                 <ProtectedRoute>
                   <Schedule />
@@ -101,7 +105,11 @@ const App = () => (
                   <Duas />
                 </ProtectedRoute>
               } />
-              <Route path="*" element={<NotFound />} />
+              <Route path="*" element={
+                <ProtectedRoute>
+                  <NotFound />
+                </ProtectedRoute>
+              } />
             </Routes>
             <NavMenu />
           </div>
