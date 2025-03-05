@@ -1,6 +1,6 @@
 
 import { ReactNode, useEffect, useState } from 'react';
-import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 
 interface ProtectedRouteProps {
@@ -9,33 +9,40 @@ interface ProtectedRouteProps {
 
 export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const { user, isLoading } = useAuth();
-  const [isReady, setIsReady] = useState(false);
-  const navigate = useNavigate();
   const location = useLocation();
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
   useEffect(() => {
-    // Only redirect after we've confirmed authentication state
+    // Only set isCheckingAuth to false after we've confirmed the auth state
     if (!isLoading) {
-      if (!user) {
-        // Store the current path to redirect back after login
-        sessionStorage.setItem('redirectAfterLogin', location.pathname);
-        navigate('/auth', { replace: true });
-      } else {
-        setIsReady(true);
-      }
+      // Small delay to ensure consistent behavior
+      const timer = setTimeout(() => {
+        setIsCheckingAuth(false);
+      }, 100);
+      
+      return () => clearTimeout(timer);
     }
-  }, [user, isLoading, navigate, location.pathname]);
+  }, [isLoading]);
 
-  // Show loading state until authentication is confirmed
-  if (isLoading || !isReady) {
+  // If we're still loading auth state or checking auth, show loading indicator
+  if (isLoading || isCheckingAuth) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-ramadan-600"></div>
+      <div className="flex items-center justify-center min-h-screen bg-white/60 backdrop-blur-sm">
+        <div className="flex flex-col items-center space-y-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-ramadan-600"></div>
+          <p className="text-ramadan-800 font-medium">Verifying authentication...</p>
+        </div>
       </div>
     );
   }
 
-  // If we've reached here, user is authenticated and we're ready to render
+  // If user is not authenticated, store current path and redirect to auth
+  if (!user) {
+    sessionStorage.setItem('redirectAfterLogin', location.pathname);
+    return <Navigate to="/auth" replace />;
+  }
+
+  // If we get here, user is authenticated
   return <>{children}</>;
 };
 

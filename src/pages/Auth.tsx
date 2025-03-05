@@ -12,12 +12,31 @@ const Auth = () => {
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [loading, setLoading] = useState(false);
-  const { signIn, signUp } = useAuth();
+  const [isProcessingAuth, setIsProcessingAuth] = useState(false);
+  const { signIn, signUp, user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  // Prevent multiple navigation attempts
+  useEffect(() => {
+    if (user && !isProcessingAuth) {
+      setIsProcessingAuth(true);
+      
+      // Get redirect path if exists, otherwise go to home
+      const redirectPath = sessionStorage.getItem('redirectAfterLogin') || '/';
+      sessionStorage.removeItem('redirectAfterLogin');
+      
+      // Small delay to ensure UI is stable
+      setTimeout(() => {
+        navigate(redirectPath, { replace: true });
+      }, 100);
+    }
+  }, [user, navigate, isProcessingAuth]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (loading) return;
+    
     setLoading(true);
 
     try {
@@ -30,11 +49,6 @@ const Auth = () => {
           title: "Welcome back",
           description: "You've successfully signed in",
         });
-        
-        // Get redirect path if exists, otherwise go to home
-        const redirectPath = sessionStorage.getItem('redirectAfterLogin') || '/';
-        sessionStorage.removeItem('redirectAfterLogin');
-        navigate(redirectPath, { replace: true });
       } else {
         // Handle signup
         if (!fullName) {
@@ -172,6 +186,7 @@ const Auth = () => {
               type="button"
               className="text-ramadan-600 hover:text-ramadan-800 text-sm font-medium transition-colors"
               onClick={() => setIsLogin(!isLogin)}
+              disabled={loading}
             >
               {isLogin ? "Don't have an account? Sign Up" : "Already have an account? Sign In"}
             </button>

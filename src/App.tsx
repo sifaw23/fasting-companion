@@ -21,44 +21,50 @@ import { useEffect, useState } from "react";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: false, // Don't retry failed queries to avoid looping issues
-      refetchOnWindowFocus: false, // Don't refetch when window regains focus
+      retry: false,
+      refetchOnWindowFocus: false,
       staleTime: 5 * 60 * 1000, // 5 minutes
     },
   },
 });
 
-// Add an AuthCheck component to handle auth redirects at the route level
+// AuthCheck component with improved stability
 const AuthCheck = ({ children }: { children: React.ReactNode }) => {
   const { user, isLoading } = useAuth();
-  const [isReady, setIsReady] = useState(false);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   
   useEffect(() => {
-    // Only set ready when we have definitively determined auth status
     if (!isLoading) {
-      if (user) {
-        // If there's a saved redirect path, navigate there
-        const redirectPath = sessionStorage.getItem('redirectAfterLogin');
-        if (redirectPath) {
-          sessionStorage.removeItem('redirectAfterLogin');
-          window.location.href = redirectPath; // Use direct location change to avoid React Router issues
-          return; // Don't set isReady yet, we're redirecting
+      // Add a small delay to ensure stable transitions
+      const timer = setTimeout(() => {
+        if (user) {
+          const redirectPath = sessionStorage.getItem('redirectAfterLogin');
+          if (redirectPath) {
+            sessionStorage.removeItem('redirectAfterLogin');
+            window.location.href = redirectPath;
+            return; // Don't proceed further, we're redirecting
+          }
         }
-      }
-      setIsReady(true);
+        setIsCheckingAuth(false);
+      }, 100);
+      
+      return () => clearTimeout(timer);
     }
   }, [user, isLoading]);
   
-  // Don't render anything while checking authentication
-  if (isLoading || !isReady) {
+  // Show consistent loading state while checking auth
+  if (isLoading || isCheckingAuth) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-ramadan-600"></div>
+      <div className="flex items-center justify-center min-h-screen bg-white/60 backdrop-blur-sm">
+        <div className="flex flex-col items-center space-y-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-ramadan-600"></div>
+          <p className="text-ramadan-800 font-medium">Checking authentication...</p>
+        </div>
       </div>
     );
   }
   
-  // Redirect if already logged in and no redirect path was found
+  // Redirect authenticated users away from auth page
   if (user) {
     return <Navigate to="/" replace />;
   }
@@ -73,7 +79,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <div className="min-h-[100dvh] pb-16"> {/* Add container with bottom padding for NavMenu */}
+          <div className="min-h-[100dvh] pb-16">
             <Routes>
               <Route path="/auth" element={
                 <AuthCheck>
