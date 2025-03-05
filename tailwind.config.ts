@@ -53,6 +53,23 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				ramadan: {
+					50: '#f5f3ff',
+					100: '#ede9fe',
+					200: '#ddd6fe',
+					300: '#c4b5fd',
+					400: '#a78bfa',
+					500: '#8b5cf6',
+					600: '#7c3aed',
+					700: '#6d28d9',
+					800: '#5b21b6',
+					900: '#4c1d95',
+					950: '#2e1065',
+					gold: '#f59e0b',
+					cream: '#fffbeb',
+					navy: '#1e1b4b',
+					teal: '#0d9488'
+				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
@@ -62,23 +79,6 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				},
-				ramadan: {
-					50: '#f0f7ff',
-					100: '#e0f0fe',
-					200: '#bae2fd',
-					300: '#7dcdfb',
-					400: '#38b6f6',
-					500: '#0c9ee8',
-					600: '#0080c6',
-					700: '#0067a0',
-					800: '#065985',
-					900: '#0c4a6e',
-					950: '#082f49',
-					gold: '#d4af37',
-					cream: '#f8f4e3',
-					navy: '#0a192f',
-					teal: '#2dcac3'
 				}
 			},
 			fontFamily: {

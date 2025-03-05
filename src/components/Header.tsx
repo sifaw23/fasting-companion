@@ -1,8 +1,9 @@
 
 import { useState, useEffect } from "react";
-import { Bell, ChevronLeft } from "lucide-react";
+import { Bell, ChevronLeft, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface HeaderProps {
   title: string;
@@ -13,6 +14,7 @@ interface HeaderProps {
 export const Header = ({ title, subtitle, showBackButton }: HeaderProps) => {
   const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,7 +28,7 @@ export const Header = ({ title, subtitle, showBackButton }: HeaderProps) => {
   return (
     <header 
       className={cn(
-        "sticky top-0 z-40 w-full transition-all duration-300 py-4 px-4",
+        "sticky top-0 z-40 w-full transition-all duration-300 py-5 px-4",
         scrolled ? "bg-white/80 backdrop-blur-md shadow-sm" : "bg-transparent"
       )}
     >
@@ -35,21 +37,27 @@ export const Header = ({ title, subtitle, showBackButton }: HeaderProps) => {
           {showBackButton && (
             <button 
               onClick={() => navigate(-1)}
-              className="mr-2 w-8 h-8 rounded-full flex items-center justify-center bg-secondary hover:bg-secondary/80 transition-colors"
+              className="mr-3 w-10 h-10 rounded-full flex items-center justify-center bg-white hover:bg-ramadan-50 border border-ramadan-100 transition-colors"
             >
-              <ChevronLeft className="h-4 w-4 text-foreground/80" />
+              <ChevronLeft className="h-5 w-5 text-ramadan-800" />
             </button>
           )}
           <div className="flex flex-col">
-            <h1 className="text-lg font-medium tracking-tight">{title}</h1>
+            <h1 className="text-xl font-semibold text-ramadan-950">{title}</h1>
             {subtitle && (
-              <p className="text-xs text-muted-foreground">{subtitle}</p>
+              <p className="text-sm text-ramadan-600/80">{subtitle}</p>
             )}
           </div>
         </div>
-        <button className="w-9 h-9 rounded-full flex items-center justify-center bg-secondary hover:bg-secondary/80 transition-colors">
-          <Bell className="h-4 w-4 text-foreground/80" />
-        </button>
+        <div className="flex items-center gap-2">
+          <button className="w-10 h-10 rounded-full flex items-center justify-center bg-white hover:bg-ramadan-50 border border-ramadan-100 transition-colors">
+            <Bell className="h-5 w-5 text-ramadan-800" />
+          </button>
+          
+          <button className="w-10 h-10 rounded-full flex items-center justify-center bg-white hover:bg-ramadan-50 border border-ramadan-100 transition-colors">
+            <User className="h-5 w-5 text-ramadan-800" />
+          </button>
+        </div>
       </div>
     </header>
   );

@@ -1,6 +1,6 @@
 
 import { Link, useLocation } from "react-router-dom";
-import { Calendar, Book, Home, Moon, Compass } from "lucide-react";
+import { Home, Calendar, Compass, BookOpen, Moon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const NavMenu = () => {
@@ -25,7 +25,7 @@ export const NavMenu = () => {
     {
       name: "Quran",
       path: "/quran",
-      icon: Book
+      icon: BookOpen
     },
     {
       name: "Duas",
@@ -35,8 +35,8 @@ export const NavMenu = () => {
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 py-2 px-4 bg-white/80 backdrop-blur-lg border-t border-border shadow-lg">
-      <nav className="max-w-md mx-auto">
+    <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-white/90 backdrop-blur-xl border-t">
+      <nav className="max-w-md mx-auto bg-ramadan-950/5 rounded-full px-2 py-1 backdrop-blur-md border border-ramadan-200">
         <ul className="flex justify-between items-center">
           {navItems.map((item) => {
             const isActive = location.pathname === item.path;
@@ -46,23 +46,24 @@ export const NavMenu = () => {
                 <Link
                   to={item.path}
                   className={cn(
-                    "flex flex-col items-center p-2 rounded-xl transition-all duration-300",
+                    "flex flex-col items-center p-2 rounded-full transition-all duration-300",
                     isActive 
-                      ? "text-ramadan-600" 
-                      : "text-muted-foreground hover:text-ramadan-500"
+                      ? "bg-ramadan-600 text-white" 
+                      : "text-ramadan-900/70 hover:bg-ramadan-100"
                   )}
                 >
                   <item.icon 
                     className={cn(
-                      "w-5 h-5 mb-1 transition-transform duration-300",
+                      "w-5 h-5 transition-transform duration-300",
                       isActive ? "scale-110" : "scale-100"
                     )} 
                   />
-                  <span className="text-xs font-medium">{item.name}</span>
-                  
-                  {isActive && (
-                    <span className="absolute bottom-1 w-1.5 h-1.5 rounded-full bg-ramadan-600" />
-                  )}
+                  <span className={cn(
+                    "text-[10px] font-medium mt-1 transition-opacity",
+                    isActive ? "opacity-100" : "opacity-70"
+                  )}>
+                    {item.name}
+                  </span>
                 </Link>
               </li>
             );

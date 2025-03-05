@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { Header } from '@/components/Header';
-import { Moon, Sun, User, Mail, Lock } from 'lucide-react';
+import { Sparkles, User, Mail, Lock, Loader2 } from 'lucide-react';
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -69,40 +69,42 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen pattern-dots relative">
+      <div className="absolute inset-0 gradient-blur opacity-40"></div>
+      
       <Header
         title={isLogin ? "Sign In" : "Create Account"}
         subtitle={isLogin ? "Welcome back" : "Join the community"}
         showBackButton
       />
 
-      <main className="container max-w-md mx-auto px-4 py-6">
-        <div className="glass-card rounded-2xl p-6 space-y-6 animate-in">
-          <div className="flex justify-center">
-            <div className="w-20 h-20 rounded-full bg-ramadan-50 flex items-center justify-center">
-              {isLogin ? (
-                <Moon className="w-10 h-10 text-ramadan-600" />
-              ) : (
-                <Sun className="w-10 h-10 text-ramadan-600" />
-              )}
+      <main className="container max-w-md mx-auto px-4 py-6 relative z-10">
+        <div className="bg-white/95 backdrop-blur-xl rounded-3xl p-8 border border-ramadan-100 shadow-xl animate-in">
+          <div className="flex justify-center mb-8">
+            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-ramadan-500 to-ramadan-700 flex items-center justify-center shadow-lg">
+              <Sparkles className="w-10 h-10 text-white" />
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <h2 className="text-2xl font-bold text-center mb-6 text-ramadan-900">
+            {isLogin ? "Welcome Back" : "Create Your Account"}
+          </h2>
+
+          <form onSubmit={handleSubmit} className="space-y-5">
             {!isLogin && (
               <div className="space-y-2">
-                <label htmlFor="fullName" className="text-sm font-medium">
+                <label htmlFor="fullName" className="text-sm font-medium text-ramadan-800">
                   Full Name
                 </label>
                 <div className="relative">
-                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-                    <User className="w-4 h-4" />
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-ramadan-400">
+                    <User className="w-5 h-5" />
                   </div>
                   <input
                     id="fullName"
                     type="text"
                     placeholder="Your full name"
-                    className="w-full pl-9 pr-4 py-2 rounded-xl border border-border bg-white/50 focus:outline-none focus:ring-2 focus:ring-ramadan-200 focus:border-ramadan-300 transition-all"
+                    className="w-full pl-12 pr-4 py-3 rounded-xl border border-ramadan-200 bg-white focus:outline-none focus:ring-2 focus:ring-ramadan-400 focus:border-ramadan-500 transition-all"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                   />
@@ -111,18 +113,18 @@ const Auth = () => {
             )}
 
             <div className="space-y-2">
-              <label htmlFor="email" className="text-sm font-medium">
+              <label htmlFor="email" className="text-sm font-medium text-ramadan-800">
                 Email
               </label>
               <div className="relative">
-                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-                  <Mail className="w-4 h-4" />
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-ramadan-400">
+                  <Mail className="w-5 h-5" />
                 </div>
                 <input
                   id="email"
                   type="email"
                   placeholder="you@example.com"
-                  className="w-full pl-9 pr-4 py-2 rounded-xl border border-border bg-white/50 focus:outline-none focus:ring-2 focus:ring-ramadan-200 focus:border-ramadan-300 transition-all"
+                  className="w-full pl-12 pr-4 py-3 rounded-xl border border-ramadan-200 bg-white focus:outline-none focus:ring-2 focus:ring-ramadan-400 focus:border-ramadan-500 transition-all"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -131,18 +133,18 @@ const Auth = () => {
             </div>
 
             <div className="space-y-2">
-              <label htmlFor="password" className="text-sm font-medium">
+              <label htmlFor="password" className="text-sm font-medium text-ramadan-800">
                 Password
               </label>
               <div className="relative">
-                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-                  <Lock className="w-4 h-4" />
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-ramadan-400">
+                  <Lock className="w-5 h-5" />
                 </div>
                 <input
                   id="password"
                   type="password"
                   placeholder="••••••••"
-                  className="w-full pl-9 pr-4 py-2 rounded-xl border border-border bg-white/50 focus:outline-none focus:ring-2 focus:ring-ramadan-200 focus:border-ramadan-300 transition-all"
+                  className="w-full pl-12 pr-4 py-3 rounded-xl border border-ramadan-200 bg-white focus:outline-none focus:ring-2 focus:ring-ramadan-400 focus:border-ramadan-500 transition-all"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
@@ -153,25 +155,22 @@ const Auth = () => {
 
             <button
               type="submit"
-              className="w-full bg-ramadan-600 hover:bg-ramadan-700 text-white font-medium py-2 px-4 rounded-xl transition-colors flex items-center justify-center"
+              className="w-full bg-gradient-to-r from-ramadan-600 to-ramadan-700 hover:from-ramadan-700 hover:to-ramadan-800 text-white font-medium py-3 px-4 rounded-xl transition-all flex items-center justify-center shadow-md hover:shadow-lg"
               disabled={loading}
             >
               {loading ? (
                 <span className="flex items-center">
-                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
+                  <Loader2 className="animate-spin mr-2 h-5 w-5" />
                   Processing...
                 </span>
               ) : isLogin ? "Sign In" : "Create Account"}
             </button>
           </form>
 
-          <div className="text-center">
+          <div className="text-center mt-8">
             <button
               type="button"
-              className="text-ramadan-600 hover:text-ramadan-800 text-sm font-medium"
+              className="text-ramadan-600 hover:text-ramadan-800 text-sm font-medium transition-colors"
               onClick={() => setIsLogin(!isLogin)}
             >
               {isLogin ? "Don't have an account? Sign Up" : "Already have an account? Sign In"}

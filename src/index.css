@@ -7,44 +7,44 @@
 
 @layer base {
   :root {
-    --background: 210 20% 98%;
-    --foreground: 222 47% 11%;
+    --background: 260 30% 98%;
+    --foreground: 260 25% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card-foreground: 260 25% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover-foreground: 260 25% 15%;
 
-    --primary: 210 100% 35%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 265 89% 56%;
+    --primary-foreground: 260 40% 98%;
 
-    --secondary: 210 15% 94%;
-    --secondary-foreground: 222 47% 11%;
+    --secondary: 265 50% 95%;
+    --secondary-foreground: 260 25% 15%;
 
-    --muted: 210 15% 94%;
-    --muted-foreground: 215 16% 46%;
+    --muted: 265 50% 95%;
+    --muted-foreground: 260 15% 45%;
 
-    --accent: 210 15% 94%;
-    --accent-foreground: 222 47% 11%;
+    --accent: 265 50% 95%;
+    --accent-foreground: 260 25% 15%;
 
     --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 260 40% 98%;
 
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 222 84% 48%;
+    --border: 260 30% 90%;
+    --input: 260 30% 90%;
+    --ring: 265 89% 70%;
 
-    --radius: 1rem;
+    --radius: 1.5rem;
 
     --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5% 26%;
-    --sidebar-primary: 240 6% 10%;
+    --sidebar-foreground: 260 5% 26%;
+    --sidebar-primary: 260 6% 10%;
     --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 5% 96%;
-    --sidebar-accent-foreground: 240 6% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217 91% 60%;
+    --sidebar-accent: 260 5% 96%;
+    --sidebar-accent-foreground: 260 6% 10%;
+    --sidebar-border: 260 13% 91%;
+    --sidebar-ring: 265 91% 60%;
   }
 
   * {
@@ -128,10 +128,27 @@
   }
 }
 
+/* Decorative elements */
+.pattern-dots {
+  background-image: radial-gradient(rgba(138, 91, 246, 0.1) 2px, transparent 2px);
+  background-size: 30px 30px;
+}
+
+.pattern-grid {
+  background-image: linear-gradient(rgba(138, 91, 246, 0.05) 1px, transparent 1px),
+                    linear-gradient(to right, rgba(138, 91, 246, 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.gradient-blur {
+  background: radial-gradient(circle at top right, rgba(138, 91, 246, 0.2), transparent 80%),
+              radial-gradient(circle at bottom left, rgba(109, 40, 217, 0.15), transparent 70%);
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -145,4 +162,32 @@
 
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-ramadan-300;
+}
+
+/* Card styles */
+.card-glow {
+  position: relative;
+  overflow: hidden;
+}
+
+.card-glow:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.2) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: card-shimmer 2s infinite;
+}
+
+@keyframes card-shimmer {
+  100% {
+    left: 150%;
+  }
 }

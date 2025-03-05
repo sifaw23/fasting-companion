@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
-import { Clock, Bell } from "lucide-react";
+import { AlarmCheck, Bell, Check } from "lucide-react";
 import { 
   formatPrayerTime, 
   getDefaultPrayerTimes, 
@@ -31,27 +31,34 @@ export const PrayerTimes = () => {
   
   return (
     <div className="w-full animate-in">
-      <div className="glass-card rounded-3xl overflow-hidden mb-6">
-        <div className="bg-gradient-to-br from-ramadan-600 to-ramadan-800 p-6 text-white">
+      <div className="bg-white rounded-3xl border border-ramadan-100 shadow-md overflow-hidden mb-6">
+        <div className="bg-gradient-to-br from-ramadan-600 to-ramadan-800 p-7 text-white">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-sm font-medium opacity-90">Next Prayer</h3>
-            <span className="text-xs opacity-80">{format(currentDate, "EEEE, MMMM d")}</span>
+            <h3 className="text-sm font-medium opacity-90 flex items-center">
+              <AlarmCheck className="w-4 h-4 mr-2" />
+              Next Prayer
+            </h3>
+            <span className="text-xs bg-white/20 rounded-lg px-2 py-1">
+              {format(currentDate, "MMM d")}
+            </span>
           </div>
           
-          <div className="flex justify-between items-end mt-2">
+          <div className="flex justify-between items-end">
             <div>
-              <h2 className="text-3xl font-semibold">{next}</h2>
-              <p className="text-sm opacity-80">in {timeRemaining}</p>
+              <h2 className="text-3xl font-bold">{next}</h2>
+              <p className="text-sm flex items-center mt-1">
+                <span className="inline-block w-2 h-2 rounded-full bg-green-400 mr-2"></span>
+                in {timeRemaining}
+              </p>
             </div>
-            <p className="text-2xl font-semibold">{formatPrayerTime(prayerTimes[next])}</p>
+            <p className="text-2xl font-bold">{formatPrayerTime(prayerTimes[next])}</p>
           </div>
         </div>
         
-        <div className="p-4">
+        <div className="p-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold">Today's Prayers</h3>
-            <div className="flex items-center text-sm text-muted-foreground">
-              <Clock className="w-4 h-4 mr-1" />
+            <h3 className="text-lg font-bold text-ramadan-900">Today's Prayers</h3>
+            <div className="flex items-center text-sm text-ramadan-600">
               <span>{format(currentTime, "h:mm a")}</span>
             </div>
           </div>
@@ -67,39 +74,64 @@ export const PrayerTimes = () => {
                 <div 
                   key={prayer}
                   className={cn(
-                    "flex items-center justify-between p-3 rounded-xl transition-all",
-                    isNext ? "bg-ramadan-50 border border-ramadan-100" : "",
-                    isCurrent ? "bg-ramadan-50/50" : ""
+                    "flex items-center justify-between p-4 rounded-xl transition-all border",
+                    isNext 
+                      ? "bg-ramadan-50 border-ramadan-200" 
+                      : isPast 
+                        ? "bg-white border-ramadan-100/50" 
+                        : "bg-white border-ramadan-100"
                   )}
                 >
                   <div className="flex items-center">
                     <div className={cn(
-                      "w-2 h-2 rounded-full mr-3",
-                      isPast ? "bg-green-500" : "bg-muted",
-                      isNext ? "bg-ramadan-500" : ""
-                    )} />
-                    <span className={cn(
-                      "font-medium",
-                      isNext ? "text-ramadan-700" : ""
+                      "w-10 h-10 rounded-full flex items-center justify-center mr-3",
+                      isPast 
+                        ? "bg-green-100" 
+                        : isNext 
+                          ? "bg-ramadan-100" 
+                          : "bg-gray-100"
                     )}>
-                      {prayer}
-                    </span>
+                      {isPast ? (
+                        <Check className="w-5 h-5 text-green-600" />
+                      ) : (
+                        <span className={cn(
+                          "font-medium text-sm",
+                          isNext ? "text-ramadan-700" : "text-gray-500"
+                        )}>
+                          {prayer.charAt(0)}
+                        </span>
+                      )}
+                    </div>
+                    <div>
+                      <span className={cn(
+                        "font-medium",
+                        isNext ? "text-ramadan-700" : ""
+                      )}>
+                        {prayer}
+                      </span>
+                      {isPast && (
+                        <p className="text-xs text-green-600">Completed</p>
+                      )}
+                      {isNext && (
+                        <p className="text-xs text-ramadan-600">Next prayer</p>
+                      )}
+                    </div>
                   </div>
                   
                   <div className="flex items-center">
                     <span className={cn(
                       "text-sm font-medium",
-                      isPast ? "text-muted-foreground" : "",
+                      isPast ? "text-gray-500" : "",
                       isNext ? "text-ramadan-700" : ""
                     )}>
                       {formatPrayerTime(time)}
                     </span>
                     
                     <button className={cn(
-                      "ml-3 p-1.5 rounded-full transition-colors",
+                      "ml-3 p-2 rounded-full transition-colors",
                       "hover:bg-ramadan-100"
                     )}>
-                      <Bell className="w-3.5 h-3.5 text-muted-foreground" />
+                      <Bell className="w-4 h-4 text-ramadan-600" />
                     </button>
                   </div>
                 </div>
